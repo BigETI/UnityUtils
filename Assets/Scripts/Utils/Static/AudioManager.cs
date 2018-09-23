@@ -61,6 +61,24 @@ namespace Utils
         }
 
         /// <summary>
+        /// Sound effects volume
+        /// </summary>
+        public static float SoundEffectsVolume
+        {
+            get
+            {
+                return ((AudioManagerScript.Instance == null) ? 0.0f : AudioManagerScript.Instance.SoundEffectsVolume);
+            }
+            set
+            {
+                if (AudioManagerScript.Instance != null)
+                {
+                    AudioManagerScript.Instance.SoundEffectsVolume = value;
+                }
+            }
+        }
+
+        /// <summary>
         /// Play next music
         /// </summary>
         public static void PlayNextMusic()

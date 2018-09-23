@@ -125,6 +125,24 @@ namespace Utils.Managers
         }
 
         /// <summary>
+        /// Sound effects volume
+        /// </summary>
+        public float SoundEffectsVolume
+        {
+            get
+            {
+                return ((soundsAudioSources.Length > 0) ? soundsAudioSources[0].volume : 0.0f);
+            }
+            set
+            {
+                foreach (AudioSource sounds_audio_source in soundsAudioSources)
+                {
+                    sounds_audio_source.volume = value;
+                }
+            }
+        }
+
+        /// <summary>
         /// Instance
         /// </summary>
         public static AudioManagerScript Instance

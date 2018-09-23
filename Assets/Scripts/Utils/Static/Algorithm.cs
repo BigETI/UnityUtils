@@ -30,5 +30,17 @@ namespace Utils
             }
             return ret.ToArray();
         }
+
+        /// <summary>
+        /// Clamp
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <param name="min">Minimum</param>
+        /// <param name="max">Maximum</param>
+        /// <returns>Clamped value</returns>
+        public static double Clamp(double value, double min, double max)
+        {
+            return ((value < min) ? min : ((value > max) ? max : value));
+        }
     }
 }
