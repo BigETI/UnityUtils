@@ -42,5 +42,55 @@ namespace Utils
         {
             return ((value < min) ? min : ((value > max) ? max : value));
         }
+
+        /// <summary>
+        /// Turn
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <param name="min">Minimum</param>
+        /// <param name="max">Maximum</param>
+        /// <returns>Turned value</returns>
+        public static float Turn(float value, float min, float max)
+        {
+            float ret = value;
+            float mn = Mathf.Min(min, max);
+            float mx = Mathf.Max(min, max);
+            float delta = Mathf.Abs(mx - mn);
+            if (delta > float.Epsilon)
+            {
+                while (ret < mn)
+                {
+                    ret += delta;
+                }
+                while (ret >= mx)
+                {
+                    ret -= delta;
+                }
+            }
+            else
+            {
+                ret = mn;
+            }
+            return ret;
+        }
+
+        /// <summary>
+        /// Turn difference signed
+        /// </summary>
+        /// <param name="fromAngle">From angle</param>
+        /// <param name="toAngle">To angle</param>
+        /// <param name="min">Minimum</param>
+        /// <param name="max">Maximum</param>
+        /// <returns>Turn difference</returns>
+        public static float TurnDifferenceSigned(float from, float to, float min, float max)
+        {
+            float f = Turn(from, min, max);
+            float t = Turn(to, min, max);
+            float mn = Mathf.Min(min, max);
+            float mx = Mathf.Max(min, max);
+            float a = Turn(t - f, mn, mx);
+            float b = Turn(f - t, mn, mx);
+            return ((a < b) ? a : -b);
+        }
     }
 }

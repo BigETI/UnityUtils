@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Audio;
+using Utils.Data;
 using Utils.Objects;
 
 /// <summary>
@@ -12,6 +15,18 @@ namespace Utils.Managers
     public class AudioManagerScript : MonoBehaviour
     {
         /// <summary>
+        /// Music audio mixer group
+        /// </summary>
+        [SerializeField]
+        private AudioMixerGroup musicAudioMixerGroup;
+
+        /// <summary>
+        /// Sound effects audio mixer group
+        /// </summary>
+        [SerializeField]
+        private AudioMixerGroup soundEffectsAudioMixerGroup;
+
+        /// <summary>
         /// Sound channel count
         /// </summary>
         [SerializeField]
@@ -21,33 +36,45 @@ namespace Utils.Managers
         /// Is muted
         /// </summary>
         [SerializeField]
-        private bool isMuted = false;
+        private bool isMuted;
 
         /// <summary>
         /// Start muted if game runs in mobile
         /// </summary>
         [SerializeField]
-        private bool startMutedIfMobile = false;
+        private bool startMutedIfMobile;
+
+        /// <summary>
+        /// Load playlist from resources
+        /// </summary>
+        [SerializeField]
+        private bool loadPlaylistFromResources = true;
+
+        /// <summary>
+        /// Resources path
+        /// </summary>
+        [SerializeField]
+        private string resourcesPath = "MusicTitles";
 
         /// <summary>
         /// Current playlist index
         /// </summary>
-        private uint currentPlaylistIndex = 0U;
+        private uint currentPlaylistIndex;
 
         /// <summary>
         /// Current sounds index
         /// </summary>
-        private uint currentSoundsIndex = 0U;
+        private uint currentSoundsIndex;
 
         /// <summary>
         /// Game paused
         /// </summary>
-        private bool gamePaused = false;
+        private bool gamePaused;
 
         /// <summary>
         /// Playlist
         /// </summary>
-        private MusicTitleObjectScript[] playlist;
+        private MusicTitleData[] playlist;
 
         /// <summary>
         /// Music audio source
@@ -55,9 +82,9 @@ namespace Utils.Managers
         private AudioSource musicAudioSource;
 
         /// <summary>
-        /// Sounds audio sources
+        /// Sound effects
         /// </summary>
-        private AudioSource[] soundsAudioSources;
+        private AudioGroup soundEffectsAudioGroup;
 
         /// <summary>
         /// Instance
@@ -67,11 +94,41 @@ namespace Utils.Managers
         /// <summary>
         /// Playlist
         /// </summary>
-        public MusicTitleObjectScript[] Playlist
+        public MusicTitleData[] Playlist
         {
             get
             {
+                if (playlist == null)
+                {
+                    playlist = new MusicTitleData[0];
+                }
                 return playlist;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    bool is_playing_music = IsPlayingMusic;
+                    List<MusicTitleData> list = new List<MusicTitleData>();
+                    foreach (MusicTitleData music_title in value)
+                    {
+                        if (music_title != null)
+                        {
+                            list.Add(new MusicTitleData(music_title));
+                        }
+                    }
+                    if (is_playing_music)
+                    {
+                        IsMuted = true;
+                    }
+                    playlist = list.ToArray();
+                    list.Clear();
+                    if (is_playing_music)
+                    {
+                        IsMuted = false;
+                    }
+                    currentPlaylistIndex = 0U;
+                }
             }
         }
 
@@ -91,7 +148,10 @@ namespace Utils.Managers
                     isMuted = value;
                     if (isMuted)
                     {
-                        musicAudioSource.Stop();
+                        if (musicAudioSource != null)
+                        {
+                            musicAudioSource.Stop();
+                        }
                         if (MusicUIManagerScript.Instance != null)
                         {
                             MusicUIManagerScript.Instance.HidePlay();
@@ -99,7 +159,7 @@ namespace Utils.Managers
                     }
                     else
                     {
-                        if (playlist.Length > 0)
+                        if (Playlist.Length > 0)
                         {
                             PlayCurrentMusic();
                         }
@@ -116,11 +176,14 @@ namespace Utils.Managers
         {
             get
             {
-                return musicAudioSource.volume;
+                return ((musicAudioSource == null) ? 0.0f : musicAudioSource.volume);
             }
             set
             {
-                musicAudioSource.volume = value;
+                if (musicAudioSource != null)
+                {
+                    musicAudioSource.volume = Mathf.Clamp(value, 0.0f, 1.0f);
+                }
             }
         }
 
@@ -131,14 +194,25 @@ namespace Utils.Managers
         {
             get
             {
-                return ((soundsAudioSources.Length > 0) ? soundsAudioSources[0].volume : 0.0f);
+                return ((soundEffectsAudioGroup == null) ? 0.0f : soundEffectsAudioGroup.Volume);
             }
             set
             {
-                foreach (AudioSource sounds_audio_source in soundsAudioSources)
+                if (soundEffectsAudioGroup != null)
                 {
-                    sounds_audio_source.volume = value;
+                    soundEffectsAudioGroup.Volume = value;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Is playing music
+        /// </summary>
+        public bool IsPlayingMusic
+        {
+            get
+            {
+                return ((musicAudioSource == null) ? false : musicAudioSource.isPlaying);
             }
         }
 
@@ -158,9 +232,9 @@ namespace Utils.Managers
         /// </summary>
         private void PlayCurrentMusic()
         {
-            if (playlist.Length > 0)
+            if ((Playlist.Length > 0) && (musicAudioSource != null))
             {
-                MusicTitleObjectScript music_title = playlist[currentPlaylistIndex];
+                MusicTitleData music_title = Playlist[currentPlaylistIndex];
                 musicAudioSource.clip = music_title.AudioClip;
                 if (!isMuted)
                 {
@@ -178,17 +252,26 @@ namespace Utils.Managers
         /// </summary>
         public void PlayNextMusic()
         {
-            if (playlist != null)
+            if (Playlist.Length > 0)
             {
-                if (playlist.Length > 0)
+                ++currentPlaylistIndex;
+                if (currentPlaylistIndex >= Playlist.Length)
                 {
-                    ++currentPlaylistIndex;
-                    if (currentPlaylistIndex >= playlist.Length)
-                    {
-                        currentPlaylistIndex = 0U;
-                    }
-                    PlayCurrentMusic();
+                    currentPlaylistIndex = 0U;
                 }
+                PlayCurrentMusic();
+            }
+        }
+
+        /// <summary>
+        /// Play sound effect
+        /// </summary>
+        /// <param name="audioTranslation">Audio translation</param>
+        public void PlaySoundEffect(AudioTranslationObjectScript audioTranslation)
+        {
+            if (audioTranslation != null)
+            {
+                PlaySoundEffect(audioTranslation.AudioClip);
             }
         }
 
@@ -198,23 +281,9 @@ namespace Utils.Managers
         /// <param name="clip"></param>
         public void PlaySoundEffect(AudioClip clip)
         {
-            if (soundsAudioSources != null)
+            if (soundEffectsAudioGroup != null)
             {
-                if (soundsAudioSources.Length > 0)
-                {
-                    AudioSource audio_source = soundsAudioSources[currentSoundsIndex];
-
-                    audio_source.clip = clip;
-                    if (!isMuted)
-                    {
-                        audio_source.Play();
-                        ++currentSoundsIndex;
-                    }
-                    if (currentSoundsIndex >= soundsAudioSources.Length)
-                    {
-                        currentSoundsIndex = 0U;
-                    }
-                }
+                soundEffectsAudioGroup.Play(clip);
             }
         }
 
@@ -222,9 +291,9 @@ namespace Utils.Managers
         /// Play music
         /// </summary>
         /// <param name="musicTitle">Music title</param>
-        public void PlayMusic(MusicTitleObjectScript musicTitle)
+        public void PlayMusic(MusicTitleData musicTitle)
         {
-            if (musicTitle != null)
+            if ((musicTitle != null) && (musicAudioSource != null))
             {
                 musicAudioSource.clip = musicTitle.AudioClip;
                 if (!isMuted)
@@ -239,11 +308,63 @@ namespace Utils.Managers
         }
 
         /// <summary>
+        /// Play music
+        /// </summary>
+        /// <param name="musicTitle">Music title</param>
+        public void PlayMusic(MusicTitleObjectScript musicTitle)
+        {
+            if (musicTitle != null)
+            {
+                PlayMusic(new MusicTitleData(musicTitle, ResourcesPath));
+            }
+        }
+
+        /// <summary>
+        /// Play music
+        /// </summary>
+        /// <param name="audioTranslation">Audio translation</param>
+        public void PlayMusic(AudioTranslationObjectScript audioTranslation)
+        {
+            if (audioTranslation != null)
+            {
+                PlayMusic(audioTranslation.AudioClip);
+            }
+        }
+
+        /// <summary>
+        /// Play music
+        /// </summary>
+        /// <param name="audioClip">Audio clip</param>
+        public void PlayMusic(AudioClip audioClip)
+        {
+            if ((audioClip != null) && (musicAudioSource != null))
+            {
+                musicAudioSource.clip = audioClip;
+                if (!isMuted)
+                {
+                    musicAudioSource.Play();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Replay music
+        /// </summary>
+        public void ReplayMusic()
+        {
+            if (musicAudioSource != null)
+            {
+                musicAudioSource.Stop();
+                musicAudioSource.Play();
+            }
+        }
+
+        /// <summary>
         /// Shuffle playlist
         /// </summary>
         public void ShufflePlaylist()
         {
-            playlist = Algorithm.Shuffle(playlist);
+            Playlist = Algorithm.Shuffle(Playlist);
         }
 
         /// <summary>
@@ -267,20 +388,67 @@ namespace Utils.Managers
         }
 
         /// <summary>
+        /// Load playlist from resources
+        /// </summary>
+        /// <param name="path">Path</param>
+        public void LoadPlaylistFromResources(string path)
+        {
+            MusicTitleObjectScript[] playlist_objects = Resources.LoadAll<MusicTitleObjectScript>(path);
+            if (playlist_objects != null)
+            {
+                MusicTitleData[] playlist = new MusicTitleData[playlist_objects.Length];
+                for (int i = 0; i < playlist.Length; i++)
+                {
+                    playlist[i] = new MusicTitleData(playlist_objects[i], path);
+                }
+                Playlist = playlist;
+            }
+            else
+            {
+                Playlist = new MusicTitleData[0];
+            }
+        }
+
+        /// <summary>
+        /// Resources path
+        /// </summary>
+        public string ResourcesPath
+        {
+            get
+            {
+                if (resourcesPath == null)
+                {
+                    resourcesPath = "MusicTitles";
+                }
+                return resourcesPath;
+            }
+        }
+
+        /// <summary>
+        /// Load playlist from resources
+        /// </summary>
+        public void LoadPlaylistFromResources()
+        {
+            LoadPlaylistFromResources(ResourcesPath);
+        }
+
+        /// <summary>
         /// Start
         /// </summary>
         private void Start()
         {
-            playlist = Resources.LoadAll<MusicTitleObjectScript>("MusicTitles");
-            musicAudioSource = gameObject.AddComponent<AudioSource>();
-            musicAudioSource.playOnAwake = false;
-            musicAudioSource.volume = 0.25f;
-            soundsAudioSources = new AudioSource[soundChannelCount];
-            for (uint i = 0U; i != soundChannelCount; i++)
+            if (loadPlaylistFromResources)
             {
-                soundsAudioSources[i] = gameObject.AddComponent<AudioSource>();
-                soundsAudioSources[i].playOnAwake = false;
+                LoadPlaylistFromResources();
             }
+            musicAudioSource = gameObject.AddComponent<AudioSource>();
+            if (musicAudioSource != null)
+            {
+                musicAudioSource.playOnAwake = false;
+                musicAudioSource.volume = MusicVolume;
+                musicAudioSource.outputAudioMixerGroup = musicAudioMixerGroup;
+            }
+            soundEffectsAudioGroup = AudioGroup.CreateAudioGroup(gameObject, soundChannelCount, soundEffectsAudioMixerGroup);
             ShufflePlaylist();
             PlayCurrentMusic();
         }
@@ -292,7 +460,7 @@ namespace Utils.Managers
         {
             if (!isMuted)
             {
-                if ((!gamePaused) && (!(musicAudioSource.isPlaying)))
+                if ((!gamePaused) && (!IsPlayingMusic))
                 {
                     PlayNextMusic();
                 }

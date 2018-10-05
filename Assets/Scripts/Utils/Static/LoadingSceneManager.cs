@@ -1,4 +1,5 @@
 ﻿using UnityEngine.SceneManagement;
+using Utils.Managers;
 
 /// <summary>
 /// Utilities namespace
@@ -23,6 +24,17 @@ namespace Utils
             get
             {
                 return sceneName;
+            }
+        }
+
+        /// <summary>
+        /// Progress
+        /// </summary>
+        public static float Progress
+        {
+            get
+            {
+                return ((LoadingScreenManagerScript.Instance == null) ? 0.0f : LoadingScreenManagerScript.Instance.Progress);
             }
         }
 

@@ -33,6 +33,17 @@ namespace Utils.Managers
         }
 
         /// <summary>
+        /// Progress
+        /// </summary>
+        public float Progress
+        {
+            get
+            {
+                return ((asyncOperation == null) ? 0.0f : asyncOperation.progress);
+            }
+        }
+
+        /// <summary>
         /// Instance
         /// </summary>
         public static LoadingScreenManagerScript Instance

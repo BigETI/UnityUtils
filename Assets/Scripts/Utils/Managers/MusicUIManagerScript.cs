@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using Utils.Data;
 using Utils.Objects;
 
 /// <summary>
@@ -68,7 +69,7 @@ namespace Utils.Managers
         /// Show play
         /// </summary>
         /// <param name="musicTitle">Music title</param>
-        public void ShowPlay(MusicTitleObjectScript musicTitle)
+        public void ShowPlay(MusicTitleData musicTitle)
         {
             if (titleText != null)
             {
@@ -82,10 +83,11 @@ namespace Utils.Managers
             {
                 authorText.text = musicTitle.Author;
             }
-            if (iconImage != null)
+            // TODO
+            /*if (iconImage != null)
             {
                 iconImage.sprite = ((musicTitle.IconSprite == null) ? defaultIconSprite : musicTitle.IconSprite);
-            }
+            }*/
             if (panelAnimator != null)
             {
                 panelAnimator.Play("Show");

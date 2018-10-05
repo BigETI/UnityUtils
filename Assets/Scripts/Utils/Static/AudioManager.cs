@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Utils.Data;
 using Utils.Managers;
 using Utils.Objects;
 
@@ -16,11 +17,11 @@ namespace Utils
         /// <summary>
         /// Playlist
         /// </summary>
-        public static MusicTitleObjectScript[] Playlist
+        public static MusicTitleData[] Playlist
         {
             get
             {
-                return (AudioManagerScript.Instance == null) ? (new MusicTitleObjectScript[0]) : AudioManagerScript.Instance.Playlist;
+                return (AudioManagerScript.Instance == null) ? (new MusicTitleData[0]) : AudioManagerScript.Instance.Playlist;
             }
         }
 
@@ -79,6 +80,28 @@ namespace Utils
         }
 
         /// <summary>
+        /// Resources path
+        /// </summary>
+        public static string ResourcesPath
+        {
+            get
+            {
+                return ((AudioManagerScript.Instance == null) ? "MusicTitles" : AudioManagerScript.Instance.ResourcesPath);
+            }
+        }
+
+        /// <summary>
+        /// Is playing music
+        /// </summary>
+        public static bool IsPlayingMusic
+        {
+            get
+            {
+                return ((AudioManagerScript.Instance == null) ? false : AudioManagerScript.Instance.IsPlayingMusic);
+            }
+        }
+
+        /// <summary>
         /// Play next music
         /// </summary>
         public static void PlayNextMusic()
@@ -86,6 +109,18 @@ namespace Utils
             if (AudioManagerScript.Instance != null)
             {
                 AudioManagerScript.Instance.PlayNextMusic();
+            }
+        }
+
+        /// <summary>
+        /// Play sound effect
+        /// </summary>
+        /// <param name="audioTranslation">Audio translation</param>
+        public static void PlaySoundEffect(AudioTranslationObjectScript audioTranslation)
+        {
+            if (AudioManagerScript.Instance != null)
+            {
+                AudioManagerScript.Instance.PlaySoundEffect(audioTranslation);
             }
         }
 
@@ -105,11 +140,58 @@ namespace Utils
         /// Play music
         /// </summary>
         /// <param name="musicTitle">Music title</param>
+        public static void PlayMusic(MusicTitleData musicTitle)
+        {
+            if (AudioManagerScript.Instance != null)
+            {
+                AudioManagerScript.Instance.PlayMusic(musicTitle);
+            }
+        }
+
+        /// <summary>
+        /// Play music
+        /// </summary>
+        /// <param name="musicTitle">Music title</param>
         public static void PlayMusic(MusicTitleObjectScript musicTitle)
         {
             if (AudioManagerScript.Instance != null)
             {
                 AudioManagerScript.Instance.PlayMusic(musicTitle);
+            }
+        }
+
+        /// <summary>
+        /// Play music
+        /// </summary>
+        /// <param name="audioTranslation">Audio translation</param>
+        public static void PlayMusic(AudioTranslationObjectScript audioTranslation)
+        {
+            if (AudioManagerScript.Instance != null)
+            {
+                AudioManagerScript.Instance.PlayMusic(audioTranslation);
+            }
+        }
+
+        /// <summary>
+        /// Play music
+        /// </summary>
+        /// <param name="audioClip">Audio clip</param>
+        public static void PlayMusic(AudioClip audioClip)
+        {
+            if (AudioManagerScript.Instance != null)
+            {
+                AudioManagerScript.Instance.PlayMusic(audioClip);
+            }
+        }
+
+        /// <summary>
+        /// Replay music
+        /// </summary>
+        public static void ReplayMusic()
+        {
+            if (AudioManagerScript.Instance != null)
+            {
+                AudioManagerScript.Instance.ReplayMusic();
             }
         }
 
