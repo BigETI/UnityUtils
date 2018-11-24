@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Audio;
+using Utils.Data;
 using Utils.Objects;
 
 /// <summary>
@@ -109,6 +110,21 @@ namespace Utils
         }
 
         /// <summary>
+        /// Apply settings
+        /// </summary>
+        /// <param name="audioSettings">Audio settings</param>
+        public void ApplySettings(AudioSettingsData audioSettings)
+        {
+            if ((audioSettings != null) && (audioSources != null))
+            {
+                foreach (AudioSource audio_source in audioSources)
+                {
+                    audioSettings.ApplySettings(audio_source);
+                }
+            }
+        }
+
+        /// <summary>
         /// Play
         /// </summary>
         /// <param name="audioTranslation">Audio translation</param>
@@ -162,9 +178,9 @@ namespace Utils
         /// </summary>
         /// <param name="gameObject">Game object</param>
         /// <param name="soundChannelCount">Sound channel count</param>
-        /// <param name="audioMixerGroup">Audio mixer group</param>
+        /// <param name="audioSettings">Audio settings</param>
         /// <returns>Audio group if successful, otherwise "null"</returns>
-        public static AudioGroup CreateAudioGroup(GameObject gameObject, uint soundChannelCount, AudioMixerGroup audioMixerGroup)
+        public static AudioGroup CreateAudioGroup(GameObject gameObject, uint soundChannelCount, AudioSettingsData audioSettings)
         {
             AudioGroup ret = null;
             if ((gameObject != null) && (soundChannelCount > 0U))
@@ -173,10 +189,9 @@ namespace Utils
                 for (uint i = 0U; i != soundChannelCount; i++)
                 {
                     AudioSource audio_source = gameObject.AddComponent<AudioSource>();
-                    if (audio_source != null)
+                    if (audioSettings != null)
                     {
-                        audio_source.playOnAwake = false;
-                        audio_source.outputAudioMixerGroup = audioMixerGroup;
+                        audioSettings.ApplySettings(audio_source);
                     }
                     audio_sources[i] = audio_source;
                 }

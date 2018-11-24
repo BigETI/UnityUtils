@@ -13,7 +13,7 @@ namespace Utils.Data
     /// Music title data
     /// </summary>
     [Serializable]
-    public class MusicTitleData
+    public class MusicTitleData : IComparable<MusicTitleData>
     {
         /// <summary>
         /// Audio clip
@@ -153,7 +153,7 @@ namespace Utils.Data
             }
             catch (Exception e)
             {
-                Debug.LogError(e.Message);
+                Debug.LogError(e);
             }
             return ret;
         }
@@ -175,14 +175,6 @@ namespace Utils.Data
                     {
                         audioClipObject = Resources.Load<AudioClip>(audioClip);
                     }
-                    /*else
-                    {
-                        AudioType audio_type = ((audioType == AudioType.UNKNOWN) ? GetAudioTypeFromURI(uri) : audioType);
-                        using (UnityWebRequest wr = UnityWebRequestMultimedia.GetAudioClip(uri, audio_type))
-                        {
-                            wr.
-                        }
-                    }*/
                 }
                 return audioClipObject;
             }
@@ -254,10 +246,32 @@ namespace Utils.Data
                 title = musicTitle.Title;
                 description = musicTitle.Description;
                 author = musicTitle.Author;
-                //iconSprite = musicTitle.IconSprite;
                 isResource = true;
                 audioType = AudioType.UNKNOWN;
             }
+        }
+
+        /// <summary>
+        /// Compare to
+        /// </summary>
+        /// <param name="other">Other</param>
+        /// <returns>Delta</returns>
+        public int CompareTo(MusicTitleData other)
+        {
+            int ret = -1;
+            if (other != null)
+            {
+                ret = Title.CompareTo(other.Title);
+                if (ret == 0)
+                {
+                    ret = Author.CompareTo(other.Author);
+                    if (ret == 0)
+                    {
+                        ret = Description.CompareTo(other.Description);
+                    }
+                }
+            }
+            return ret;
         }
     }
 }

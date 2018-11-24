@@ -20,6 +20,17 @@ namespace Utils.Triggers
         private TranslationObjectScript translationObject;
 
         /// <summary>
+        /// Translation
+        /// </summary>
+        public string Translation
+        {
+            get
+            {
+                return ((translationObject == null) ? "" : translationObject.ToString());
+            }
+        }
+
+        /// <summary>
         /// Start
         /// </summary>
         private void Start()
@@ -27,7 +38,7 @@ namespace Utils.Triggers
             Text text = GetComponent<Text>();
             if (text != null)
             {
-                text.text = (translationObject == null) ? "" : translationObject.ToString();
+                text.text = Translation;
             }
             Destroy(this);
         }

@@ -81,7 +81,7 @@ namespace Utils.Managers
         /// </summary>
         private void Start()
         {
-            asyncOperation = SceneManager.LoadSceneAsync(LoadingSceneManager.SceneName);
+            asyncOperation = SceneManager.LoadSceneAsync(SceneLoaderManager.SceneName);
         }
     }
 }

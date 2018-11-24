@@ -23,6 +23,35 @@ namespace Utils
             {
                 return (AudioManagerScript.Instance == null) ? (new MusicTitleData[0]) : AudioManagerScript.Instance.Playlist;
             }
+            set
+            {
+                if (AudioManagerScript.Instance != null)
+                {
+                    AudioManagerScript.Instance.Playlist = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Music audio source
+        /// </summary>
+        public static AudioSource MusicAudioSource
+        {
+            get
+            {
+                return (AudioManagerScript.Instance == null) ? null : AudioManagerScript.Instance.MusicAudioSource;
+            }
+        }
+
+        /// <summary>
+        /// Sound effects
+        /// </summary>
+        public static AudioGroup SoundEffectsAudioGroup
+        {
+            get
+            {
+                return (AudioManagerScript.Instance == null) ? null : AudioManagerScript.Instance.SoundEffectsAudioGroup;
+            }
         }
 
         /// <summary>
@@ -87,6 +116,77 @@ namespace Utils
             get
             {
                 return ((AudioManagerScript.Instance == null) ? "MusicTitles" : AudioManagerScript.Instance.ResourcesPath);
+            }
+        }
+
+        /// <summary>
+        /// Music time
+        /// </summary>
+        /// <remarks>This property is inconsistent, if audio is compressed!</remarks>
+        public static float MusicTime
+        {
+            get
+            {
+                return ((AudioManagerScript.Instance == null) ? 0.0f : AudioManagerScript.Instance.MusicTime);
+            }
+            set
+            {
+                if (AudioManagerScript.Instance != null)
+                {
+                    AudioManagerScript.Instance.MusicTime = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Music time in samples
+        /// </summary>
+        /// <remarks>This property is inconsistent, if audio is compressed!</remarks>
+        public static int MusicTimeSamples
+        {
+            get
+            {
+                return ((AudioManagerScript.Instance == null) ? 0 : AudioManagerScript.Instance.MusicTimeSamples);
+            }
+            set
+            {
+                if (AudioManagerScript.Instance != null)
+                {
+                    AudioManagerScript.Instance.MusicTimeSamples = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Music frequency
+        /// </summary>
+        public static int MusicFrequency
+        {
+            get
+            {
+                return ((AudioManagerScript.Instance == null) ? 0 : AudioManagerScript.Instance.MusicFrequency);
+            }
+        }
+
+        /// <summary>
+        /// Music audio clip samples
+        /// </summary>
+        public static int MusicAudioClipSamples
+        {
+            get
+            {
+                return ((AudioManagerScript.Instance == null) ? 0 : AudioManagerScript.Instance.MusicAudioClipSamples);
+            }
+        }
+
+        /// <summary>
+        /// Music audio clip
+        /// </summary>
+        public static AudioClip MusicAudioClip
+        {
+            get
+            {
+                return ((AudioManagerScript.Instance == null) ? null : AudioManagerScript.Instance.MusicAudioClip);
             }
         }
 
@@ -185,6 +285,58 @@ namespace Utils
         }
 
         /// <summary>
+        /// Play music delayed
+        /// </summary>
+        /// <param name="musicTitle">Music title</param>
+        /// <param name="delay">Delay</param>
+        public static void PlayMusicDelayed(MusicTitleData musicTitle, float delay)
+        {
+            if (AudioManagerScript.Instance != null)
+            {
+                AudioManagerScript.Instance.PlayMusicDelayed(musicTitle, delay);
+            }
+        }
+
+        /// <summary>
+        /// Play music delayed
+        /// </summary>
+        /// <param name="musicTitle">Music title</param>
+        /// <param name="delay">Delay</param>
+        public static void PlayMusicDelayed(MusicTitleObjectScript musicTitle, float delay)
+        {
+            if (AudioManagerScript.Instance != null)
+            {
+                AudioManagerScript.Instance.PlayMusicDelayed(musicTitle, delay);
+            }
+        }
+
+        /// <summary>
+        /// Play music delayed
+        /// </summary>
+        /// <param name="audioTranslation">Audio translation</param>
+        /// <param name="delay">Delay</param>
+        public static void PlayMusicDelayed(AudioTranslationObjectScript audioTranslation, float delay)
+        {
+            if (AudioManagerScript.Instance != null)
+            {
+                AudioManagerScript.Instance.PlayMusicDelayed(audioTranslation, delay);
+            }
+        }
+
+        /// <summary>
+        /// Play music delayed
+        /// </summary>
+        /// <param name="audioClip">Audio clip</param>
+        /// <param name="delay">Delay</param>
+        public static void PlayMusicDelayed(AudioClip audioClip, float delay)
+        {
+            if (AudioManagerScript.Instance != null)
+            {
+                AudioManagerScript.Instance.PlayMusicDelayed(audioClip, delay);
+            }
+        }
+
+        /// <summary>
         /// Replay music
         /// </summary>
         public static void ReplayMusic()
@@ -196,6 +348,17 @@ namespace Utils
         }
 
         /// <summary>
+        /// Stop music
+        /// </summary>
+        public static void StopMusic()
+        {
+            if (AudioManagerScript.Instance != null)
+            {
+                AudioManagerScript.Instance.StopMusic();
+            }
+        }
+
+        /// <summary>
         /// Shuffle playlist
         /// </summary>
         public static void ShufflePlaylist()
@@ -203,6 +366,18 @@ namespace Utils
             if (AudioManagerScript.Instance != null)
             {
                 AudioManagerScript.Instance.ShufflePlaylist();
+            }
+        }
+
+        /// <summary>
+        /// Load playlist from resources
+        /// </summary>
+        /// <param name="path">Path</param>
+        public static void LoadPlaylistFromResources(string path)
+        {
+            if (AudioManagerScript.Instance != null)
+            {
+                AudioManagerScript.Instance.LoadPlaylistFromResources(path);
             }
         }
     }

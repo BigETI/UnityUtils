@@ -7,9 +7,9 @@ using Utils.Managers;
 namespace Utils
 {
     /// <summary>
-    /// Loading scene manager class
+    /// Scene loader manager class
     /// </summary>
-    public static class LoadingSceneManager
+    public static class SceneLoaderManager
     {
         /// <summary>
         /// Scene name
@@ -44,8 +44,15 @@ namespace Utils
         /// <param name="sceneName">Scene name</param>
         public static void LoadScene(string sceneName)
         {
-            LoadingSceneManager.sceneName = sceneName;
-            SceneManager.LoadScene("LoadingScreenScene");
+            SceneLoaderManager.sceneName = sceneName;
+            if (SceneLoaderManagerScript.Instance == null)
+            {
+                SceneManager.LoadScene("LoadingScreenScene");
+            }
+            else
+            {
+                SceneLoaderManagerScript.Instance.LoadScene();
+            }
         }
     }
 }

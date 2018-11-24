@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using Utils.Data;
-using Utils.Objects;
 
 /// <summary>
 /// Utilities managers namespace

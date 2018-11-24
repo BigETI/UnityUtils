@@ -14,7 +14,7 @@ namespace Utils.Controllers
         /// <summary>
         /// Time
         /// </summary>
-        [Range(0.0625f, float.MaxValue)]
+        [Range(0.000390625f, float.MaxValue)]
         [SerializeField]
         private float time = 1.0f;
 
@@ -42,6 +42,21 @@ namespace Utils.Controllers
         private float elapsedTime = 0.0f;
 
         /// <summary>
+        /// Time
+        /// </summary>
+        public float Time
+        {
+            get
+            {
+                return time;
+            }
+            set
+            {
+                time = Mathf.Max(value, 0.0f);
+            }
+        }
+
+        /// <summary>
         /// Is running
         /// </summary>
         public bool IsRunning
@@ -67,7 +82,7 @@ namespace Utils.Controllers
         {
             if (isRunning)
             {
-                elapsedTime += (unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime);
+                elapsedTime += (unscaledTime ? UnityEngine.Time.unscaledDeltaTime : UnityEngine.Time.deltaTime);
                 while (elapsedTime >= time)
                 {
                     elapsedTime -= time;
