@@ -156,6 +156,16 @@ namespace Utils.Controllers
         /// <param name="selectedButtonIndex">Selected button index</param>
         public void Respond(int selectedButtonIndex)
         {
+
+            DialogManagerScript dialog_manager = DialogManagerScript.Instance;
+            if (dialog_manager != null)
+            {
+                dialog_manager.PopLastDialog();
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
             if (dialogData.OnDialogResponse != null)
             {
                 EDialogResponse dialog_response = EDialogResponse.None;
@@ -205,15 +215,6 @@ namespace Utils.Controllers
                         break;
                 }
                 dialogData.OnDialogResponse(new DialogResponseEventArguments(dialog_response, selectedButtonIndex));
-            }
-            DialogManagerScript dialog_manager = DialogManagerScript.Instance;
-            if (dialog_manager != null)
-            {
-                dialog_manager.PopLastDialog();
-            }
-            else
-            {
-                Destroy(gameObject);
             }
         }
 
