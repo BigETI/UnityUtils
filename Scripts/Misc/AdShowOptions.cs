@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 
 /// <summary>
 /// Utilities namespace
@@ -17,11 +16,6 @@ namespace Utils
         private string gamerSID;
 
         /// <summary>
-        /// Result callback
-        /// </summary>
-        private Action<EAdShowResult> resultCallback;
-
-        /// <summary>
         /// Gamer serial ID
         /// </summary>
         public string GamerSID
@@ -30,7 +24,7 @@ namespace Utils
             {
                 if (gamerSID == null)
                 {
-                    gamerSID = "";
+                    gamerSID = string.Empty;
                 }
                 return gamerSID;
             }
@@ -39,13 +33,7 @@ namespace Utils
         /// <summary>
         /// Result callback
         /// </summary>
-        public Action<EAdShowResult> ResultCallback
-        {
-            get
-            {
-                return resultCallback;
-            }
-        }
+        public Action<EAdShowResult> ResultCallback { get; private set; }
 
         /// <summary>
         /// Constructor
@@ -53,7 +41,7 @@ namespace Utils
         /// <param name="resultCallback">Result callback</param>
         public AdShowOptions(Action<EAdShowResult> resultCallback)
         {
-            this.resultCallback = resultCallback;
+            ResultCallback = resultCallback;
         }
 
         /// <summary>
@@ -64,7 +52,7 @@ namespace Utils
         public AdShowOptions(string gamerSID, Action<EAdShowResult> resultCallback)
         {
             this.gamerSID = gamerSID;
-            this.resultCallback = resultCallback;
+            ResultCallback = resultCallback;
         }
     }
 }

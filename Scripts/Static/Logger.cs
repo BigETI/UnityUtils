@@ -99,7 +99,7 @@ namespace Utils
                     writer.Write(DateTime.Now.ToString());
                     writer.WriteLine("]");
                     writer.WriteLine(text);
-                    writer.WriteLine("");
+                    writer.WriteLine(string.Empty);
                 }
             }
         }
