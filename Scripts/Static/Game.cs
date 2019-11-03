@@ -8,9 +8,9 @@ using UnityEngine.Analytics;
 #endif
 
 /// <summary>
-/// Utilitites namespace
+/// Unity utilities namespace
 /// </summary>
-namespace Utils
+namespace UnityUtils
 {
     /// <summary>
     /// Game class

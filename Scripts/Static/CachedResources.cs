@@ -2,9 +2,9 @@
 using UnityEngine;
 
 /// <summary>
-/// Utilities namespace
+/// Unity utilities namespace
 /// </summary>
-namespace Utils
+namespace UnityUtils
 {
     /// <summary>
     /// Cached resources
