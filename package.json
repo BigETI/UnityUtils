@@ -1,0 +1,16 @@
+{
+    "name": "com.bigeti.utilities",
+    "version": "1.3.1",
+    "displayName": "Unity utilities package",
+    "description": "This repository contains the utilities package used in my games.",
+    "dependencies": {},
+    "keywords": [
+        "utils",
+        "utilities"
+    ],
+    "author": {
+        "name": "Ethem Kurt",
+        "email": "bigeti.ethem@gmail.com",
+        "url": "https://bigeti.de/"
+    }
+}
